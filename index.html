@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>潮汐当铺 · Tide Pawnshop</title>
+<meta name="description" content="海边小镇的当铺：看货、讨价、赶海，十天里还上三百块的债，查清二十年前那条沉船。">
+<meta name="theme-color" content="#1d120a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%232d4a5c'/%3E%3Ccircle cx='32' cy='30' r='20' fill='%23efe3c4'/%3E%3Ctext x='32' y='40' font-size='28' text-anchor='middle' fill='%232d4a5c' font-family='serif' font-weight='bold'%3E%E7%95%B6%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+<div id="game">
+  <header id="top">
+    <div class="date"><b id="t-date">七月初六</b><span id="t-weather"></span></div>
+    <canvas id="t-tide"></canvas>
+    <div class="money"><span>现钱 <b id="t-cash">0</b></span><span class="debt">欠 <b id="t-debt">0</b></span><span>口碑 <b id="t-rep">0</b></span></div>
+    <nav>
+      <button data-open="store">库房</button>
+      <button data-open="tickets">当票</button>
+      <button data-open="notes">笔记</button>
+      <button id="b-mute" title="声音">♪</button>
+    </nav>
+  </header>
+  <section id="scene-wrap"><canvas id="scene"></canvas></section>
+  <section id="tray-wrap">
+    <canvas id="tray"></canvas>
+    <div id="tray-head"></div>
+    <div id="tray-hint">柜面空着。<br>等客人上门。</div>
+    <div id="tray-notes"></div>
+    <div id="tray-tools"></div>
+  </section>
+  <section id="panel">
+    <div id="dlg"><div id="who"></div><div id="say"></div><div id="more" hidden>▾ 点一下</div></div>
+    <div id="act"></div>
+  </section>
+</div>
+<div id="beach" hidden><canvas id="beach-c"></canvas><div id="beach-ui"></div></div>
+<div id="sheet" hidden></div>
+<div id="toasts"></div>
+<noscript>潮汐当铺需要打开 JavaScript。</noscript>
+<script>
+  // 开不了张时把原因写出来（手机上看不到控制台）
+  (function () {
+    var errs = [];
+    function show() {
+      if (window.__tideStarted) return;
+      var e = document.getElementById('boot-err');
+      if (!e) { e = document.createElement('div'); e.id = 'boot-err'; e.style.cssText = 'position:fixed;left:20px;right:20px;top:30%;z-index:99;color:#efe3c8;font:15px/1.8 serif;text-align:center;white-space:pre-wrap'; document.body.appendChild(e); }
+      e.textContent = '潮汐当铺没能开张' + (errs.length ? '：\n' + errs.slice(0, 3).join('\n') : '（这个浏览器可能太旧，或者是直接双击打开的文件——请用网址打开）');
+    }
+    window.addEventListener('error', function (ev) { errs.push(ev.message || '脚本载入失败'); show(); }, true);
+    window.addEventListener('unhandledrejection', function (ev) { errs.push(String(ev.reason && ev.reason.message || ev.reason)); show(); });
+    setTimeout(show, 12000);
+  })();
+</script>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
