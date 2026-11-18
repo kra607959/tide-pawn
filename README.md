@@ -33,6 +33,7 @@ node serve.mjs
 | `node tools/sim.mjs [局数]` | 让几种机器人掌柜（眼拙 / 寻常 / 老练，下不下滩，各个剧情选择）各玩若干局，看钱够不够、结局分布 |
 | `node tools/sim.mjs --one 7` | 看某一局的逐日账目 |
 | `node tools/shots.mjs` | 用无头 Edge / Chrome 按真实时钟玩几个场景并截图到 `shots/`（桌面 1280×720、手机 390×844） |
+| `node tools/shots.mjs --url https://kra607959.github.io/tide-pawn/ --only title,day0,finale` | 检查线上版本的标题、首日交易与结局（桌面和手机） |
 
 ## 结构
 

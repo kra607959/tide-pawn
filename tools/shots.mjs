@@ -3,6 +3,7 @@
 //   node tools/shots.mjs --only day0,late      只截某几个场景
 //   node tools/shots.mjs --sizes 390x844       只截某种尺寸
 //   node tools/shots.mjs --out 目录             截图放哪（默认 shots/）
+//   node tools/shots.mjs --url https://kra607959.github.io/tide-pawn/  检查线上版本
 // 后几天的场景先用机器人把一局玩到那天早上，再把存档塞进页面。
 import fs from 'node:fs';
 import http from 'node:http';
@@ -35,7 +36,7 @@ const server = http.createServer((req, res) => {
   fs.readFile(file, (err, data) => err ? res.writeHead(404).end() : res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream' }).end(data));
 });
 await new Promise(r => server.listen(0, '127.0.0.1', r));
-const url = `http://127.0.0.1:${server.address().port}/`;
+const url = option('--url') || `http://127.0.0.1:${server.address().port}/`;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const profile = fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()), 'tide-shots-'));
 const proc = spawn(browser, ['--headless=new', '--remote-debugging-port=0', '--user-data-dir=' + profile, '--no-first-run', '--no-default-browser-check',
@@ -196,7 +197,7 @@ const SCENES = {
       await p.ev(`__step(500, 100, () => !!document.querySelector('#sheet:not([hidden]) select'))`);
       await sleep(400); await p.shot('deduction');
       await p.ev(`(async () => {
-        const { CLUES, QUESTIONS } = await import('/src/data/text.js');
+        const { CLUES, QUESTIONS } = await import('./src/data/text.js');
         const sels = [...document.querySelectorAll('#sheet select')];
         QUESTIONS.forEach((Q, i) => { const s = sels[i]; const o = [...s.options].find(o => o.value && (CLUES[o.value].q || []).includes(Q.id)); if (o) s.value = o.value; });
       })()`);
