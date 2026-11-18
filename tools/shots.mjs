@@ -94,7 +94,15 @@ async function openPage(w, h, save) {
   await send('Page.addScriptToEvaluateOnNewDocument', { source: src }, sessionId);
   return {
     w, h, mobile, sessionId,
-    async go() { await send('Page.navigate', { url }, sessionId); await sleep(1500); },
+    async go() {
+      await send('Page.navigate', { url }, sessionId);
+      const deadline = Date.now() + 30000;
+      while (Date.now() < deadline) {
+        if (await this.ev(`!!(window.__tide && document.querySelector('.title-box .btn.primary'))`)) { await sleep(200); return; }
+        await sleep(100);
+      }
+      throw new Error('30 秒内游戏未就绪：' + await this.ev(`document.querySelector('#boot-err')?.textContent || location.href`));
+    },
     async ev(expr) {
       const r = await send('Runtime.evaluate', { expression: expr, awaitPromise: true, returnByValue: true }, sessionId);
       if (r.exceptionDetails) throw new Error(r.exceptionDetails.exception?.description || r.exceptionDetails.text);
